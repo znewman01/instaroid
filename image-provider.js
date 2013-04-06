@@ -1,44 +1,52 @@
+var Db = require('mongodb').Db,
+    MongoClient = require('mongodb').MongoClient,
+    Server = require('mongodb').Server,
+    Grid = require('mongodb').Grid,
+    ObjectID = require('mongodb').ObjectID;
+
+var mongo_db = process.env.MONGO_DB || 'instaroid';
+var mongo_host = process.env.MONGO_HOST || 'localhost';
+var mongo_port = process.env.MONGO_PORT || 27017;
+
 var imageCounter = 1;
 
 ImageProvider = function(){};
 
-ImageProvider.prototype.dummyData = [];
+ImageProvider.prototype.findAll = function(callback) {
+  var db = new Db(mongo_db, new Server(mongo_host, mongo_port), {w: -1});
+  db.open(function(err, db) {
+    var collection = db.collection("images");
+    collection.distinct("image_id", function(err, ids) {
+      db.close();
+      callback(null, ids.map(function(id) { return id + ".png"; }));
+    });
+  });
+};
 
 ImageProvider.prototype.findById = function(id, callback) {
-  var result = null;
-  for(var i =0; i<this.dummyData.length; i++) {
-    if(this.dummyData[i]._id == id) {
-      result = this.dummyData[i];
-      break;
-    }
-  }
-  callback(null, result);
+  var db = new Db(mongo_db, new Server(mongo_host, mongo_port), {w: -1});
+  db.open(function(err, db) {
+    var grid = new Grid(db, "fs");
+    grid.get(ObjectID(id), function(err, image) {
+      db.close();
+      callback(null, image);
+    });
+  });
 };
 
-ImageProvider.prototype.findAll = function(callback) {
-  callback(null, this.dummyData);
+ImageProvider.prototype.save = function(image, callback) {
+  var db = new Db(mongo_db, new Server(mongo_host, mongo_port), {w: -1});
+  db.open(function(err, db) {
+    var grid = new Grid(db, "fs");
+    grid.put(image, {}, function(err, result) {
+      var collection = db.collection("images");
+      collection.insert({image_id: result._id},
+        function(err, result) {
+      db.close();
+      callback(null, result);
+      });
+    });
+  });
 };
-
-ImageProvider.prototype.save = function(images, callback) {
-  var image = null;
-
-  if(typeof(images.length)=="undefined")
-        images = [images];
-
-  for(var i =0; i< images.length; i++) {
-    image = images[i];
-    image._id = imageCounter++;
-    image.created_at = new Date();
-
-    this.dummyData[this.dummyData.length]= image;
-  }
-  callback(null, images);
-};
-
-new ImageProvider().save([
-  {url: "/images/adi-logo.png"}
-], function(error, images){});
-
-new ImageProvider().findAll(function(error, images){});
 
 exports.ImageProvider = ImageProvider;
