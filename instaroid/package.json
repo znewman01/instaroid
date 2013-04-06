@@ -1,13 +1,17 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
+  "name": "instaroid",
+  "version": "0.0.1-3",
   "private": true,
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
     "express": "3.1.1",
-    "jade": "0.28.*",
-    "mongodb": "1.2.*"
+    "jade": "0.28.2",
+    "mongodb": "1.2.14"
+  },
+  "subdomain": "instaroid",
+  "engines": {
+    "node": "0.8.x"
   }
 }
