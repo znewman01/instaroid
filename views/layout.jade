@@ -3,5 +3,25 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap-responsive.min.css')
   body
-    block content
+    div(class="navbar navbar-inverse navbar-fixed-top") 
+      div(class="navbar-inner")
+        div(class="container")
+          button(type="button", class="btn btn-navbar", data-toggle="collapse", data-target=".nav-collapse")
+            span(class="icon-bar")
+            span(class="icon-bar")
+            span(class="icon-bar")
+          a(class="brand", href="#") Instaroids
+          div(class="nav-collapse collapse")
+            ul(class="nav")
+              li(class="active")
+                a(href="#") Home
+    div(class="container")
+      block content
+      hr
+      footer
+        p &copy Zack 2013;
+    script(src='http://code.jquery.com/jquery-1.9.1.min.js')
+    script(src='/javascripts/bootstrap.min.js')

@@ -27,7 +27,13 @@ ImageProvider.prototype.findById = function(id, callback) {
   var db = new Db(mongo_db, new Server(mongo_host, mongo_port), {w: -1});
   db.open(function(err, db) {
     var grid = new Grid(db, "fs");
-    grid.get(ObjectID(id), function(err, image) {
+    var oid = null;
+    try {
+      oid = ObjectID(id)
+    } catch (e) {
+      console.log(id);
+    }
+    grid.get(oid, function(err, image) {
       db.close();
       callback(null, image);
     });

@@ -2,6 +2,9 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
-  each image in images
-    img(src= image, width=400, height=200)
+  each row in rows
+    div(class="row-fluid")
+      each image in row
+        div(class="span4")
+          img(src= image)
+    div(class="spacer")
