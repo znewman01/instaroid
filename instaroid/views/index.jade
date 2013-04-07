@@ -3,8 +3,8 @@ extends layout
 block content
   h1= title
   each row in rows
-    div(class="row-fluid")
+    div(class="row")
       each image in row
-        div(class="span4")
+        div(class="span3")
           img(src= image)
     div(class="spacer")
